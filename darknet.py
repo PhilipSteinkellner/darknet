@@ -456,12 +456,12 @@ def performDetect(imagePath="data/dog.jpg", thresh= 0.25, configPath = "./cfg/yo
             print("Unable to show image: "+str(e))
     return detections
 
-def performBatchDetect(thresh= 0.25, configPath = "./cfg/yolov4.cfg", weightPath = "yolov4.weights", metaPath= "./cfg/coco.data", hier_thresh=.5, nms=.45, batch_size=3):
+def performBatchDetect(img_samples=["data/dog.jpg", "data/person.jpg"], thresh= 0.25, configPath = "./cfg/yolov4.cfg", weightPath = "yolov4.weights", metaPath= "./cfg/coco.data", hier_thresh=.5, nms=.45, batch_size=2):
     import cv2
     import numpy as np
     # NB! Image sizes should be the same
     # You can change the images, yet, be sure that they have the same width and height
-    img_samples = ['data/person.jpg', 'data/person.jpg', 'data/person.jpg']
+    #img_samples = ['data/person.jpg', 'data/person.jpg', 'data/person.jpg']
     image_list = [cv2.imread(k) for k in img_samples]
 
     net = load_net_custom(configPath.encode('utf-8'), weightPath.encode('utf-8'), 0, batch_size)
@@ -505,15 +505,15 @@ def performBatchDetect(thresh= 0.25, configPath = "./cfg/yolov4.cfg", weightPath
                     label = c
             if score > thresh:
                 box = det.bbox
-                left, top, right, bottom = map(int,(box.x - box.w / 2, box.y - box.h / 2,
-                                            box.x + box.w / 2, box.y + box.h / 2))
-                boxes.append((top, left, bottom, right))
+                #left, top, right, bottom = map(int,(box.x - box.w / 2, box.y - box.h / 2,
+                 #                           box.x + box.w / 2, box.y + box.h / 2))
+                boxes.append((box.x/pred_width, box.y/pred_height, box.w/pred_width, box.h/pred_height))
                 scores.append(score)
                 classes.append(label)
-                boxColor = (int(255 * (1 - (score ** 2))), int(255 * (score ** 2)), 0)
-                cv2.rectangle(image_list[b], (left, top),
-                          (right, bottom), boxColor, 2)
-        cv2.imwrite(os.path.basename(img_samples[b]),image_list[b])
+                #boxColor = (int(255 * (1 - (score ** 2))), int(255 * (score ** 2)), 0)
+                #cv2.rectangle(image_list[b], (left, top),
+                 #         (right, bottom), boxColor, 2)
+        #cv2.imwrite(os.path.basename(img_samples[b]),image_list[b])
 
         batch_boxes.append(boxes)
         batch_scores.append(scores)
@@ -522,6 +522,6 @@ def performBatchDetect(thresh= 0.25, configPath = "./cfg/yolov4.cfg", weightPath
     return batch_boxes, batch_scores, batch_classes    
 
 if __name__ == "__main__":
-    print(performDetect())
+    #print(performDetect())
     #Uncomment the following line to see batch inference working 
-    #print(performBatchDetect())
+    print(performBatchDetect(batch_size=2))

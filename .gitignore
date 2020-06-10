@@ -15,6 +15,7 @@ caffe/
 grasp/
 images/
 opencv/
+opencv_contrib/
 convnet/
 decaf/
 submission/

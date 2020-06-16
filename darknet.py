@@ -524,4 +524,4 @@ def performBatchDetect(img_samples=["data/dog.jpg", "data/person.jpg"], thresh= 
 if __name__ == "__main__":
     #print(performDetect())
     #Uncomment the following line to see batch inference working 
-    print(performBatchDetect(batch_size=2))
+    print(performBatchDetect())
